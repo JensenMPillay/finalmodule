@@ -36,6 +36,7 @@ class FinalModule extends Module // Extends Modèle Module
             !parent::install()
             || !Configuration::updateValue('ANNEE', '1992')
             || !Configuration::updateValue('MOIS', 'JUILLET')
+            || !Configuration::updateValue('JOUR', '5')
         ) {
             return false;
         }
@@ -49,6 +50,7 @@ class FinalModule extends Module // Extends Modèle Module
             !parent::uninstall()
             || !Configuration::deleteByName('ANNEE')
             || !Configuration::deleteByName('MOIS')
+            || !Configuration::deleteByName('JOUR')
         ) {
             return false;
         }
@@ -84,6 +86,12 @@ class FinalModule extends Module // Extends Modèle Module
                     'name' => 'MOIS',
                     'required' => true
                 ],
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Modifier le jour'),
+                    'name' => 'JOUR',
+                    'required' => true
+                ],
             ],
             'submit' => [
                 'title' => $this->l('Save'),
@@ -101,6 +109,7 @@ class FinalModule extends Module // Extends Modèle Module
         // Préremplissage value de l'input name = "NEW_KEY_SECURITY"
         $helper->fields_value['ANNEE'] = Configuration::get('ANNEE');
         $helper->fields_value['MOIS'] = Configuration::get('MOIS');
+        $helper->fields_value['JOUR'] = Configuration::get('JOUR');
 
         return $helper->generateForm($fieldForm);
     }
@@ -113,8 +122,9 @@ class FinalModule extends Module // Extends Modèle Module
             // Tools:getValue = $_POST || $_GET
             $annee = Tools::getValue('ANNEE');
             $mois = Tools::getValue('MOIS');
+            $jour = Tools::getValue('JOUR');
 
-            if (empty($annee) || empty($mois)) {
+            if (empty($annee) || empty($mois) || empty($jour)) {
                 // Erreur
                 return $this->displayError('Fields cannot be empty');
             }
@@ -126,6 +136,7 @@ class FinalModule extends Module // Extends Modèle Module
                 // Modification
                 Configuration::updateValue('ANNEE', $annee);
                 Configuration::updateValue('MOIS', $mois);
+                Configuration::updateValue('JOUR', $jour);
                 // Affichage "Succès"
                 return $this->displayConfirmation('Keys have been updated');
             }
